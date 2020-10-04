@@ -4,21 +4,25 @@ const imports = {
   },
 }
 
-let WasmInst: any
-
-// wasm読み込み
 fetch('./hello_world.wasm')
   .then((response) => {
     if (!response.ok) throw Error('File error')
     return response.arrayBuffer()
   })
   .then((bytes) => WebAssembly.instantiate(bytes, imports))
-  .then((results) => {
-    init(results.instance)
-  })
-  .catch((err) => console.log(err))
+  .then(main)
 
-function init(wasm: any) {
-  WasmInst = wasm
-  WasmInst.exports.hello_rust()
+function helloJs() {
+  const canvas = <HTMLCanvasElement> document.getElementById('canvas')
+  const gl = canvas?.getContext('webgl')
+  gl?.clearColor(0.6, 0.8, 0.9, 1.0)
+  gl?.clear(gl.COLOR_BUFFER_BIT)
+  gl?.finish()
+  window.addEventListener('beforeunload', function (e) {
+    gl?.getExtension('WEBGL_lose_context')?.loseContext()
+  })
+}
+
+function main(wasm: WebAssembly.Module) {
+  wasm.toString.call.arguments.hello_rust()
 }
