@@ -3,7 +3,7 @@ extern "C" {
 }
 
 #[no_mangle]
-fn hello_rust() {
+pub fn hello_rust() {
     unsafe {
         hello_js();
     }

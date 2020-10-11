@@ -13,17 +13,16 @@ fetch('./hello_world.wasm')
   .then(main)
 
 function helloJs() {
-  const canvas = document.getElementById('canvas')
+  const canvas = <HTMLCanvasElement> document.getElementById('canvas')
   const gl = canvas?.getContext('webgl')
-  gl.clearColor(0.6, 0.8, 0.9, 1.0)
-  gl.clear(gl.COLOR_BUFFER_BIT)
-  gl.finish()
+  gl?.clearColor(0.6, 0.8, 0.9, 1.0)
+  gl?.clear(gl.COLOR_BUFFER_BIT)
+  gl?.finish()
   window.addEventListener('beforeunload', function (e) {
-    gl.getExtension('WEBGL_lose_context').loseContext()
+    gl?.getExtension('WEBGL_lose_context')?.loseContext()
   })
 }
 
-function main(results) {
-  const wasm = results.instance
-  wasm.exports.hello_rust()
+function main(wasm: WebAssembly.Module) {
+  wasm.toString.call.arguments.hello_rust()
 }
